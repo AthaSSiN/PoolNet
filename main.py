@@ -25,6 +25,15 @@ def get_test_info(sal_mode='e'):
     elif sal_mode == 'm_r': # for speed test
         image_root = './data/MSRA/Imgs_resized/'
         image_source = './data/MSRA/test_resized.lst'
+    elif sal_mode == 'amazon':
+        image_root = './'
+        image_source = './amazon.txt'
+    elif sal_mode == 'dslr': 
+        image_root = './'
+        image_source = './dslr.txt'
+    elif sal_mode == 'web':
+        image_root = './'
+        image_source = './webcam.txt'
 
     return image_root, image_source
 
