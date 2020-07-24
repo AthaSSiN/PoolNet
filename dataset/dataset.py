@@ -37,16 +37,17 @@ class ImageDataTrain(data.Dataset):
         return self.sal_num
 
 class ImageDataTest(data.Dataset):
-    def __init__(self, data_root, data_list):
+    def __init__(self, data_root, data_list, test_fold):
         self.data_root = data_root
         self.data_list = data_list
+        self.test_fold = test_fold
         with open(self.data_list, 'r') as f:
             self.image_list = [x.strip() for x in f.readlines()]
 
         self.image_num = len(self.image_list)
 
     def __getitem__(self, item):
-        image, im_size = load_image_test(os.path.join(self.data_root, self.image_list[item]))
+        image, im_size = load_image_test(os.path.join(self.data_root, self.image_list[item]), self.test_fold)
         image = torch.Tensor(image)
 
         return {'image': image, 'name': self.image_list[item % self.image_num], 'size': im_size}
@@ -59,30 +60,37 @@ def get_loader(config, mode='train', pin=False):
     shuffle = False
     if mode == 'train':
         shuffle = True
-        dataset = ImageDataTrain(config.train_root, config.train_list)
+        dataset = ImageDataTrain(config.train_root, config.train_list, config.test_fold)
         data_loader = data.DataLoader(dataset=dataset, batch_size=config.batch_size, shuffle=shuffle, num_workers=config.num_thread, pin_memory=pin)
     else:
-        dataset = ImageDataTest(config.test_root, config.test_list)
+        dataset = ImageDataTest(config.test_root, config.test_list, config.test_fold)
         data_loader = data.DataLoader(dataset=dataset, batch_size=config.batch_size, shuffle=shuffle, num_workers=config.num_thread, pin_memory=pin)
     return data_loader
 
 def load_image(path):
     if not os.path.exists(path):
         print('File {} not exists'.format(path))
-    im = cv2.imread(path)
+    im = Image.open(path)
     in_ = np.array(im, dtype=np.float32)
     in_ -= np.array((104.00699, 116.66877, 122.67892))
     in_ = in_.transpose((2,0,1))
     return in_
 
-def load_image_test(path):
+def load_image_test(path, test_fold):
     if not os.path.exists(path):
         print('File {} not exists'.format(path))
-    im = cv2.imread(path)
+    im = Image.open(path)
     in_ = np.array(im, dtype=np.float32)
     im_size = tuple(in_.shape[:2])
     in_ -= np.array((104.00699, 116.66877, 122.67892))
     in_ = in_.transpose((2,0,1))
+    pt = path.split('/')
+    p = '/'
+    pl = p.join(pt[:-1])
+    pl = os.path.join(test_fold, pl)
+    if not os.path.exists(pl):
+        os.makedirs(pl)
+        print("made ", pl)
     return in_, im_size
 
 def load_sal_label(path):
