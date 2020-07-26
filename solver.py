@@ -25,11 +25,11 @@ class Solver(object):
         self.lr_decay_epoch = [15,]
         self.build_model()
         if config.mode == 'test':
-            #print('Loading pre-trained model from %s...' % self.config.model)
-            #if self.config.cuda:
-            #    self.net.load_state_dict(torch.load(self.config.model))
-            #else:
-            #    self.net.load_state_dict(torch.load(self.config.model, map_location='cpu'))
+            print('Loading pre-trained model from %s...' % self.config.model)
+            if self.config.cuda:
+                self.net.load_state_dict(torch.load(self.config.model))
+            else:
+                self.net.load_state_dict(torch.load(self.config.model, map_location='cpu'))
             self.net.eval()
 
     # print the network information and parameter numbers

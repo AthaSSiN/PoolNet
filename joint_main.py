@@ -28,6 +28,15 @@ def get_test_info(sal_mode='e'):
     elif sal_mode == 'b': # BSDS dataset for edge evaluation
         image_root = './data/HED-BSDS_PASCAL/HED-BSDS/test/'
         image_source = './data/HED-BSDS_PASCAL/HED-BSDS/test.lst'
+    elif sal_mode == 'amazon':
+        image_root = './'
+        image_source = 'PoolNet/amazon.txt'
+    elif sal_mode == 'dslr': 
+        image_root = './'
+        image_source = 'PoolNet/dslr.txt'
+    elif sal_mode == 'webcam':
+        image_root = './'
+        image_source = 'PoolNet/webcam.txt'
     return image_root, image_source
 
 def main(config):
@@ -53,7 +62,7 @@ def main(config):
 if __name__ == '__main__':
 
     vgg_path = './dataset/pretrained/vgg16_20M.pth'
-    resnet_path = './dataset/pretrained/resnet50_caffe.pth'
+    resnet_path = './resnet50_caffe.pth'
 
     parser = argparse.ArgumentParser()
 

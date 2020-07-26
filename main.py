@@ -31,7 +31,7 @@ def get_test_info(sal_mode='e'):
     elif sal_mode == 'dslr': 
         image_root = './'
         image_source = 'PoolNet/dslr.txt'
-    elif sal_mode == 'web':
+    elif sal_mode == 'webcam':
         image_root = './'
         image_source = 'PoolNet/webcam.txt'
 
@@ -60,10 +60,10 @@ def main(config):
 if __name__ == '__main__':
 
     vgg_path = './dataset/pretrained/vgg16_20M.pth'
-    resnet_path = './run-1/models/final.pth'
+    resnet_path = './resnet50_caffe.pth'
 
     parser = argparse.ArgumentParser()
-    print(resnet_path)
+
     # Hyper-parameters
     parser.add_argument('--n_color', type=int, default=3)
     parser.add_argument('--lr', type=float, default=5e-5) # Learning rate resnet:5e-5, vgg:1e-4
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     config = parser.parse_args()
 
     if not os.path.exists(config.save_folder):
-        os.makedirs(config.save_folder)
+        os.mkdir(config.save_folder)
 
     # Get test set info
     test_root, test_list = get_test_info(config.sal_mode)

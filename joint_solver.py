@@ -12,6 +12,8 @@ import torchvision.utils as vutils
 import cv2
 import math
 import time
+import matplotlib.pyplot as plt
+from PIL import Image
 
 
 class Solver(object):
@@ -103,7 +105,8 @@ class Solver(object):
                     preds = self.net(images, mode=test_mode)
                     pred = np.squeeze(torch.sigmoid(preds).cpu().data.numpy())
                     multi_fuse = 255 * pred
-                    cv2.imwrite(os.path.join(self.config.test_fold, name[:-4] + '_' + mode_name[test_mode] + '.png'), multi_fuse)
+                    plt.imsave(os.path.join(self.config.test_fold, name[:-4] + '.png'), multi_fuse)
+                    print("saved ", os.path.join(self.config.test_fold, name[:-4] + '.png'))
         time_e = time.time()
         print('Speed: %f FPS' % (img_num/(time_e-time_s)))
         print('Test Done!')
